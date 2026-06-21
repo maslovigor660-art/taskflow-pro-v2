@@ -1,0 +1,1270 @@
+/* CSS переменные для единообразия */
+:root {
+    --primary: #4361ee;
+    --primary-dark: #3a56d4;
+    --primary-light: #4895ef;
+    --secondary: #7209b7;
+    --secondary-dark: #5a08a0;
+    --success: #4cc9f0;
+    --success-dark: #38b2d9;
+    --warning: #f72585;
+    --warning-dark: #e11575;
+    --danger: #ef233c;
+    --danger-dark: #d90429;
+    --info: #2ec4b6;
+    --info-dark: #24a396;
+    
+    --light: #f8f9fa;
+    --light-gray: #e9ecef;
+    --gray: #adb5bd;
+    --dark-gray: #6c757d;
+    --dark: #212529;
+    --darker: #1a1d21;
+    
+    --border-radius: 12px;
+    --border-radius-sm: 8px;
+    --border-radius-lg: 16px;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+    --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s ease;
+    --transition-fast: all 0.15s ease;
+}
+
+/* Сброс стилей по умолчанию */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Основные стили body */
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+/* Контейнер приложения */
+.container {
+    width: 100%;
+    max-width: 1400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.app-container {
+    background-color: white;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 1300px;
+    overflow: hidden;
+    transition: var(--transition);
+    min-height: 800px;
+}
+
+/* Шапка приложения */
+.app-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: white;
+    padding: 25px 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.app-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+    background-size: cover;
+}
+
+.header-content {
+    position: relative;
+    z-index: 1;
+}
+
+.app-header h1 {
+    font-size: 2.2rem;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.app-header p {
+    opacity: 0.9;
+    font-size: 1.1rem;
+}
+
+/* Уведомления */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    padding: 15px 20px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+    border-left: 4px solid var(--primary);
+    z-index: 1000;
+    max-width: 400px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success {
+    border-left-color: var(--success);
+}
+
+.notification.error {
+    border-left-color: var(--danger);
+}
+
+.notification.warning {
+    border-left-color: var(--warning);
+}
+
+.close-notification {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--gray);
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Стили для страниц */
+.page {
+    display: none;
+}
+
+.active-page {
+    display: block;
+}
+
+/* Стили форм */
+.form-container {
+    max-width: 450px;
+    margin: 0 auto;
+    padding: 40px 30px;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.form-header h2 {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    color: var(--dark);
+    font-weight: 600;
+}
+
+.form-header p {
+    color: var(--dark-gray);
+    font-size: 1rem;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.95rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid var(--light-gray);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: var(--transition);
+    background-color: white;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+}
+
+/* Индикатор силы пароля */
+.password-strength {
+    margin-top: 8px;
+}
+
+.strength-bar {
+    height: 4px;
+    background-color: var(--light-gray);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.strength-bar::before {
+    content: '';
+    display: block;
+    height: 100%;
+    width: 0%;
+    background-color: var(--danger);
+    transition: var(--transition);
+}
+
+.strength-bar.weak::before { width: 25%; background-color: var(--danger); }
+.strength-bar.medium::before { width: 50%; background-color: var(--warning); }
+.strength-bar.strong::before { width: 75%; background-color: var(--info); }
+.strength-bar.very-strong::before { width: 100%; background-color: var(--success); }
+
+.strength-text {
+    font-size: 0.8rem;
+    color: var(--dark-gray);
+}
+
+.password-match {
+    font-size: 0.8rem;
+    margin-top: 4px;
+    min-height: 16px;
+}
+
+.password-match.valid {
+    color: var(--success);
+}
+
+.password-match.invalid {
+    color: var(--danger);
+}
+
+/* Опции формы */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--dark-gray);
+}
+
+.checkbox-container input {
+    display: none;
+}
+
+.checkmark {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--gray);
+    border-radius: 4px;
+    margin-right: 8px;
+    position: relative;
+    transition: var(--transition);
+}
+
+.checkbox-container input:checked + .checkmark {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.checkbox-container input:checked + .checkmark::after {
+    content: '✓';
+    position: absolute;
+    color: white;
+    font-size: 12px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.forgot-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+/* Стили кнопок */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 24px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+}
+
+.btn-secondary {
+    background-color: var(--secondary);
+}
+
+.btn-secondary:hover {
+    background-color: var(--secondary-dark);
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 2px solid var(--light-gray);
+    color: var(--dark);
+}
+
+.btn-outline:hover {
+    background-color: var(--light-gray);
+    border-color: var(--gray);
+}
+
+.btn-danger {
+    background-color: var(--danger);
+}
+
+.btn-danger:hover {
+    background-color: var(--danger-dark);
+}
+
+.btn-loader {
+    width: 16px;
+    height: 16px;
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Ссылки */
+.link-text {
+    text-align: center;
+    margin-top: 25px;
+    color: var(--dark-gray);
+}
+
+.auth-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-link:hover {
+    text-decoration: underline;
+}
+
+/* Страница задач - Макет */
+#tasks-page {
+    display: flex;
+    min-height: 700px;
+}
+
+.sidebar {
+    width: 280px;
+    background: linear-gradient(180deg, var(--darker) 0%, #2d3748 100%);
+    color: white;
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+    background-color: var(--light);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Информация о пользователе */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.user-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.username {
+    font-weight: 600;
+    margin-bottom: 4px;
+    font-size: 1rem;
+}
+
+.user-email {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Навигация в боковой панели */
+.sidebar-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.nav-section h3 {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    opacity: 0.7;
+    font-weight: 600;
+}
+
+.nav-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    color: white;
+    padding: 12px 15px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    margin-bottom: 5px;
+}
+
+.nav-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-btn.active {
+    background-color: var(--primary);
+    box-shadow: var(--shadow);
+}
+
+.task-count {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    min-width: 24px;
+    text-align: center;
+}
+
+/* Категории */
+.categories-list {
+    margin-bottom: 10px;
+}
+
+.category-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    margin-bottom: 4px;
+}
+
+.category-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.category-item.active {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.category-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.category-name {
+    flex: 1;
+    font-size: 0.9rem;
+}
+
+.category-actions {
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.category-item:hover .category-actions {
+    opacity: 1;
+}
+
+.category-action-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 3px;
+    font-size: 0.8rem;
+}
+
+.category-action-btn:hover {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.add-category-btn {
+    color: var(--primary-light);
+    font-size: 0.9rem;
+}
+
+.add-category-btn:hover {
+    background-color: rgba(67, 97, 238, 0.1);
+}
+
+/* Футер боковой панели */
+.sidebar-footer {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Основной контент */
+.content-header {
+    background: white;
+    padding: 25px 30px;
+    border-bottom: 1px solid var(--light-gray);
+    box-shadow: var(--shadow-sm);
+}
+
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header-actions h2 {
+    color: var(--dark);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Поиск */
+.search-box {
+    position: relative;
+    min-width: 250px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 40px 10px 15px;
+    border: 2px solid var(--light-gray);
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.search-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray);
+}
+
+/* Опции просмотра */
+.view-options {
+    display: flex;
+    background-color: var(--light-gray);
+    border-radius: var(--border-radius);
+    padding: 4px;
+}
+
+.view-btn {
+    background: none;
+    border: none;
+    padding: 8px 12px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 1rem;
+}
+
+.view-btn.active {
+    background-color: white;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Статистика */
+.stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--light) 0%, #f1f3f9 100%);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--light-gray);
+}
+
+.stat-number {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--dark-gray);
+    font-weight: 500;
+}
+
+/* Тело контента */
+.content-body {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+/* Карточка добавления задачи */
+.add-task-card {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 25px;
+    overflow: hidden;
+}
+
+.add-task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.add-task-header h3 {
+    color: var(--dark);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.toggle-form-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--gray);
+    transition: var(--transition);
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.toggle-form-btn:hover {
+    color: var(--dark);
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.add-task-form {
+    padding: 25px;
+    display: none;
+}
+
+.add-task-form.expanded {
+    display: block;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.task-title-input {
+    padding: 12px 15px;
+    border: 2px solid var(--light-gray);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.task-title-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.category-select, .date-input, .sort-select {
+    padding: 12px 15px;
+    border: 2px solid var(--light-gray);
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+    background-color: white;
+    cursor: pointer;
+}
+
+/* Селектор приоритета */
+.priority-selector {
+    display: flex;
+    gap: 8px;
+}
+
+.priority-btn {
+    background: none;
+    border: 2px solid var(--light-gray);
+    border-radius: var(--border-radius-sm);
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 1.1rem;
+}
+
+.priority-btn.active {
+    border-color: var(--primary);
+    background-color: rgba(67, 97, 238, 0.1);
+}
+
+.priority-btn[data-priority="low"]:hover { border-color: var(--success); }
+.priority-btn[data-priority="medium"]:hover { border-color: var(--warning); }
+.priority-btn[data-priority="high"]:hover { border-color: var(--danger); }
+.priority-btn[data-priority="urgent"]:hover { border-color: var(--primary); }
+
+/* Описание задачи */
+.task-description {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid var(--light-gray);
+    border-radius: var(--border-radius);
+    font-size: 0.95rem;
+    resize: vertical;
+    min-height: 80px;
+    transition: var(--transition);
+}
+
+.task-description:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* Действия формы */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+/* Управление задачами */
+.tasks-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.sort-options {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sort-options label {
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.9rem;
+}
+
+.bulk-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Контейнер задач */
+.tasks-container {
+    display: grid;
+    gap: 15px;
+}
+
+.tasks-container[data-view="list"] {
+    grid-template-columns: 1fr;
+}
+
+.tasks-container[data-view="grid"] {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+/* Элемент задачи */
+.task-item {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--light-gray);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.task-item:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+}
+
+.task-item.overdue {
+    border-left: 4px solid var(--danger);
+}
+
+.task-item.important {
+    border-left: 4px solid var(--warning);
+}
+
+.task-item.completed {
+    opacity: 0.7;
+    background-color: var(--light);
+}
+
+.task-item.completed .task-title {
+    text-decoration: line-through;
+}
+
+.task-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.task-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.task-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.task-title {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--dark);
+    line-height: 1.4;
+}
+
+.task-description-preview {
+    color: var(--dark-gray);
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.task-meta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.task-category {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    background-color: var(--light-gray);
+    border-radius: 12px;
+    font-size: 0.8rem;
+    color: var(--dark);
+}
+
+.category-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.task-priority {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.priority-low { background-color: rgba(76, 201, 240, 0.1); color: var(--success); }
+.priority-medium { background-color: rgba(247, 37, 133, 0.1); color: var(--warning); }
+.priority-high { background-color: rgba(239, 35, 60, 0.1); color: var(--danger); }
+.priority-urgent { background-color: rgba(67, 97, 238, 0.1); color: var(--primary); }
+
+.task-due-date {
+    font-size: 0.8rem;
+    color: var(--dark-gray);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.task-due-date.overdue {
+    color: var(--danger);
+    font-weight: 600;
+}
+
+.task-actions {
+    display: flex;
+    gap: 8px;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.task-item:hover .task-actions {
+    opacity: 1;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: var(--gray);
+    transition: var(--transition);
+    padding: 6px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon:hover {
+    color: var(--primary);
+    background-color: rgba(67, 97, 238, 0.1);
+}
+
+.btn-delete:hover {
+    color: var(--danger);
+    background-color: rgba(239, 35, 60, 0.1);
+}
+
+/* Пустое состояние */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--dark-gray);
+}
+
+.empty-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: var(--dark);
+}
+
+.empty-state p {
+    margin-bottom: 25px;
+    font-size: 1rem;
+}
+
+/* Модальные окна */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: var(--border-radius-lg);
+    padding: 30px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: var(--shadow-lg);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--gray);
+    padding: 5px;
+    border-radius: 4px;
+    transition: var(--transition);
+}
+
+.close-btn:hover {
+    color: var(--dark);
+    background-color: var(--light-gray);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+/* Выбор цвета */
+.color-picker {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.color-presets {
+    display: flex;
+    gap: 8px;
+}
+
+.color-option {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: var(--transition);
+}
+
+.color-option:hover {
+    transform: scale(1.1);
+}
+
+.color-option.active {
+    border-color: var(--dark);
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 250px;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    #tasks-page {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        order: 2;
+    }
+    
+    .main-content {
+        order: 1;
+    }
+    
+    .header-actions {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .header-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .search-box {
+        min-width: auto;
+        flex: 1;
+    }
+    
+    .tasks-controls {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    
+    .bulk-actions {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+    
+    .modal-content {
+        padding: 20px;
+    }
+    
+    .app-header {
+        padding: 20px;
+    }
+    
+    .app-header h1 {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .app-container {
+        border-radius: var(--border-radius);
+    }
+    
+    .content-body {
+        padding: 20px;
+    }
+    
+    .form-container {
+        padding: 30px 20px;
+    }
+    
+    .stats-bar {
+        grid-template-columns: 1fr;
+    }
+    
+    .task-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}

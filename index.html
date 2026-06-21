@@ -1,0 +1,1949 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow Pro - Управление задачами</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --gray: #adb5bd;
+            --dark-gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border-radius: 12px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .app-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 1400px;
+            min-height: 850px;
+            overflow: hidden;
+        }
+
+        /* Верхняя навигация */
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid var(--light-gray);
+            padding: 0 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-brand h1 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 2px;
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+            padding: 4px;
+        }
+
+        .nav-tab {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--dark-gray);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-tab:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .nav-tab.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info-small {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar-small {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* Стили для вкладок */
+        .tab-content {
+            display: none;
+            min-height: 780px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ВКЛАДКА 1: РЕГИСТРАЦИЯ/ВХОД */
+        .auth-tab {
+            display: flex;
+            min-height: 780px;
+        }
+
+        .auth-sidebar {
+            width: 40%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .auth-sidebar h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .auth-sidebar p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .auth-features {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-content {
+            flex: 1;
+            padding: 60px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-form-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* ВКЛАДКА 2: ОБЩИЙ ОБЗОР */
+        .overview-tab {
+            display: flex;
+            min-height: 780px;
+        }
+
+        .overview-sidebar {
+            width: 300px;
+            background: var(--light);
+            border-right: 1px solid var(--light-gray);
+            padding: 30px 20px;
+            overflow-y: auto;
+        }
+
+        .user-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .user-avatar-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 0 auto 15px;
+        }
+
+        .user-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .user-email {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .stats-card h3 {
+            font-size: 1rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .stat-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .overview-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .welcome-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            margin-bottom: 40px;
+        }
+
+        .welcome-section h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .boards-section {
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-header h3 {
+            font-size: 1.3rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--light-gray);
+            color: var(--dark);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+        }
+
+        .btn-success:hover {
+            background-color: var(--success-dark);
+        }
+
+        .boards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .board-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--light-gray);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .board-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .board-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .board-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .board-color {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--border-radius);
+        }
+
+        .board-meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+
+        .recent-tasks {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .task-item-small {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: var(--light);
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary);
+        }
+
+        .task-checkbox-small {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .task-title-small {
+            flex: 1;
+            font-size: 0.95rem;
+        }
+
+        /* ВКЛАДКА 3: КОНКРЕТНАЯ ДОСКА */
+        .board-tab {
+            display: flex;
+            min-height: 780px;
+        }
+
+        .board-sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #2d3748 0%, #1a202c 100%);
+            color: white;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .board-info {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .board-color-large {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+        }
+
+        .board-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .board-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .board-stat {
+            text-align: center;
+        }
+
+        .board-stat-number {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-light);
+        }
+
+        .board-stat-label {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .board-filters {
+            margin-bottom: 30px;
+        }
+
+        .filter-btn {
+            width: 100%;
+            background: none;
+            border: none;
+            color: white;
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+
+        .filter-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary);
+        }
+
+        .board-actions {
+            margin-top: auto;
+        }
+
+        .board-content {
+            flex: 1;
+            background: var(--light);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .board-header-content {
+            background: white;
+            padding: 25px 30px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .board-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .board-title-large {
+            font-size: 1.8rem;
+            color: var(--dark);
+            font-weight: 700;
+        }
+
+        .board-description {
+            color: var(--dark-gray);
+            font-size: 1rem;
+            line-height: 1.6;
+            max-width: 800px;
+        }
+
+        .board-stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .board-stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--light-gray);
+            text-align: center;
+        }
+
+        .board-stat-card .number {
+            display: block;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .board-stat-card .label {
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+
+        .board-body {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .add-task-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .add-task-section h3 {
+            margin-bottom: 20px;
+            color: var(--dark);
+            font-size: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .priority-selector {
+            display: flex;
+            gap: 10px;
+        }
+
+        .priority-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            background: none;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .priority-btn.active {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+
+        .tasks-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .task-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary);
+            transition: var(--transition);
+        }
+
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .task-card.completed {
+            opacity: 0.7;
+            background-color: var(--light);
+        }
+
+        .task-card.completed .task-title {
+            text-decoration: line-through;
+        }
+
+        .task-header-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        .task-title {
+            flex: 1;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--dark);
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .task-card:hover .task-actions {
+            opacity: 1;
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--gray);
+            padding: 5px;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .btn-icon:hover {
+            color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+
+        .btn-delete:hover {
+            color: var(--warning);
+            background-color: rgba(247, 37, 133, 0.1);
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .task-priority {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .priority-high { background: rgba(239, 35, 60, 0.1); color: #ef233c; }
+        .priority-medium { background: rgba(247, 37, 133, 0.1); color: #f72585; }
+        .priority-low { background: rgba(76, 201, 240, 0.1); color: #4cc9f0; }
+
+        .task-due-date {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--dark-gray);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        /* Общие стили */
+        .hidden {
+            display: none !important;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            border-left: 4px solid var(--primary);
+            z-index: 1000;
+            max-width: 400px;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left-color: var(--success);
+        }
+
+        .notification.error {
+            border-left-color: var(--warning);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--gray);
+            padding: 0;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .auth-tab,
+            .overview-tab,
+            .board-tab {
+                flex-direction: column;
+            }
+            
+            .auth-sidebar,
+            .overview-sidebar,
+            .board-sidebar {
+                width: 100%;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .boards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .board-stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .top-nav {
+                padding: 0 15px;
+            }
+            
+            .nav-tabs {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Уведомления -->
+        <div id="notification" class="notification hidden">
+            <span id="notification-text"></span>
+            <button class="close-btn">&times;</button>
+        </div>
+
+        <!-- Верхняя навигация -->
+        <div class="top-nav">
+            <div class="nav-brand">
+                <h1>🚀 TaskFlow Pro</h1>
+            </div>
+            
+            <div class="nav-tabs" id="nav-tabs">
+                <button class="nav-tab" data-tab="auth-tab">
+                    <span>🔐</span>
+                    <span class="tab-text">Регистрация/Вход</span>
+                </button>
+                <button class="nav-tab" data-tab="overview-tab">
+                    <span>📊</span>
+                    <span class="tab-text">Общий обзор</span>
+                </button>
+                <button class="nav-tab" data-tab="board-tab">
+                    <span>📋</span>
+                    <span class="tab-text">Доска задач</span>
+                </button>
+            </div>
+            
+            <div class="user-menu" id="user-menu" style="display: none;">
+                <div class="user-info-small">
+                    <div class="user-avatar-small" id="user-avatar-small">U</div>
+                    <div>
+                        <div id="username-small"></div>
+                        <button class="btn btn-outline" id="logout-btn" style="padding: 6px 12px; font-size: 0.85rem;">Выйти</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА 1: РЕГИСТРАЦИЯ/ВХОД -->
+        <div id="auth-tab" class="tab-content active">
+            <div class="auth-tab">
+                <div class="auth-sidebar">
+                    <h2>Добро пожаловать в TaskFlow Pro</h2>
+                    <p>Мощный инструмент для управления задачами и проектами. Организуйте свои задачи, сотрудничайте с командой и достигайте целей эффективнее.</p>
+                    
+                    <div class="auth-features">
+                        <div class="feature-item">
+                            <div class="feature-icon">📋</div>
+                            <div>
+                                <strong>Неограниченные доски</strong>
+                                <p>Создавайте столько досок, сколько нужно</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">⚡</div>
+                            <div>
+                                <strong>Мгновенная синхронизация</strong>
+                                <p>Ваши задачи всегда под рукой</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🔒</div>
+                            <div>
+                                <strong>Безопасность данных</strong>
+                                <p>Ваши данные надежно защищены</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="auth-content">
+                    <div class="auth-form-container">
+                        <!-- Форма входа -->
+                        <div id="login-form-container">
+                            <h2 style="font-size: 2rem; margin-bottom: 10px; color: var(--dark);">С возвращением!</h2>
+                            <p style="color: var(--dark-gray); margin-bottom: 30px;">Войдите в ваш аккаунт</p>
+                            
+                            <form id="login-form">
+                                <div class="form-group">
+                                    <label for="login-username">Имя пользователя</label>
+                                    <input type="text" id="login-username" class="form-control" placeholder="Введите имя пользователя" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="login-password">Пароль</label>
+                                    <input type="password" id="login-password" class="form-control" placeholder="Введите ваш пароль" required>
+                                </div>
+                                <button type="submit" class="btn" style="width: 100%;">Войти в систему</button>
+                            </form>
+                            
+                            <div style="text-align: center; margin-top: 20px; color: var(--dark-gray);">
+                                Нет аккаунта? <a href="#" id="show-register" style="color: var(--primary); text-decoration: none; font-weight: 600;">Зарегистрироваться</a>
+                            </div>
+                        </div>
+
+                        <!-- Форма регистрации -->
+                        <div id="register-form-container" class="hidden">
+                            <h2 style="font-size: 2rem; margin-bottom: 10px; color: var(--dark);">Создать аккаунт</h2>
+                            <p style="color: var(--dark-gray); margin-bottom: 30px;">Присоединяйтесь к сообществу TaskFlow Pro</p>
+                            
+                            <form id="register-form">
+                                <div class="form-group">
+                                    <label for="register-username">Имя пользователя</label>
+                                    <input type="text" id="register-username" class="form-control" placeholder="Придумайте имя пользователя" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="register-email">Email</label>
+                                    <input type="email" id="register-email" class="form-control" placeholder="Введите ваш email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="register-password">Пароль</label>
+                                    <input type="password" id="register-password" class="form-control" placeholder="Создайте надежный пароль" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="register-confirm-password">Подтвердите пароль</label>
+                                    <input type="password" id="register-confirm-password" class="form-control" placeholder="Повторите пароль" required>
+                                </div>
+                                <button type="submit" class="btn" style="width: 100%;">Создать аккаунт</button>
+                            </form>
+                            
+                            <div style="text-align: center; margin-top: 20px; color: var(--dark-gray);">
+                                Уже есть аккаунт? <a href="#" id="show-login" style="color: var(--primary); text-decoration: none; font-weight: 600;">Войти в систему</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА 2: ОБЩИЙ ОБЗОР -->
+        <div id="overview-tab" class="tab-content">
+            <div class="overview-tab">
+                <div class="overview-sidebar">
+                    <div class="user-card">
+                        <div class="user-avatar-large" id="user-avatar-large">U</div>
+                        <div class="user-name" id="user-name">Пользователь</div>
+                        <div class="user-email" id="user-email">user@example.com</div>
+                        <button class="btn btn-outline" style="width: 100%; margin-top: 15px;">Редактировать профиль</button>
+                    </div>
+                    
+                    <div class="stats-card">
+                        <h3>Общая статистика</h3>
+                        <div class="stat-item">
+                            <span class="stat-label">Всего досок</span>
+                            <span class="stat-value" id="total-boards">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Всего задач</span>
+                            <span class="stat-value" id="total-tasks">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Выполнено</span>
+                            <span class="stat-value" id="completed-tasks">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">В процессе</span>
+                            <span class="stat-value" id="pending-tasks">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-card">
+                        <h3>Активность</h3>
+                        <div class="stat-item">
+                            <span class="stat-label">За сегодня</span>
+                            <span class="stat-value" id="today-tasks">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">На этой неделе</span>
+                            <span class="stat-value" id="week-tasks">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Просрочено</span>
+                            <span class="stat-value" id="overdue-tasks">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="overview-content">
+                    <div class="welcome-section">
+                        <h2>Добро пожаловать, <span id="welcome-name">Пользователь</span>!</h2>
+                        <p>Управляйте своими задачами эффективно. Вот обзор ваших досок и активности.</p>
+                    </div>
+                    
+                    <div class="boards-section">
+                        <div class="section-header">
+                            <h3>Мои доски</h3>
+                            <button class="btn" id="create-board-btn">
+                                <span>➕</span>
+                                <span>Новая доска</span>
+                            </button>
+                        </div>
+                        
+                        <div class="boards-grid" id="boards-grid">
+                            <!-- Доски будут здесь -->
+                        </div>
+                    </div>
+                    
+                    <div class="recent-tasks">
+                        <div class="section-header">
+                            <h3>Последние задачи</h3>
+                        </div>
+                        
+                        <div class="task-list" id="recent-tasks-list">
+                            <!-- Последние задачи будут здесь -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА 3: КОНКРЕТНАЯ ДОСКА -->
+        <div id="board-tab" class="tab-content">
+            <div class="board-tab">
+                <div class="board-sidebar">
+                    <div class="board-info">
+                        <div class="board-color-large" id="current-board-color" style="background: #4361ee;"></div>
+                        <div class="board-name" id="current-board-name">Название доски</div>
+                        <div class="board-description-small" id="current-board-description">Описание доски</div>
+                        
+                        <div class="board-stats">
+                            <div class="board-stat">
+                                <span class="board-stat-number" id="board-total-tasks">0</span>
+                                <span class="board-stat-label">Всего</span>
+                            </div>
+                            <div class="board-stat">
+                                <span class="board-stat-number" id="board-done-tasks">0</span>
+                                <span class="board-stat-label">Выполнено</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="board-filters">
+                        <h4 style="font-size: 0.9rem; margin-bottom: 15px; opacity: 0.7;">ФИЛЬТРЫ</h4>
+                        <button class="filter-btn active" data-filter="all">
+                            <span>📋</span>
+                            <span>Все задачи</span>
+                        </button>
+                        <button class="filter-btn" data-filter="today">
+                            <span>📅</span>
+                            <span>Сегодня</span>
+                        </button>
+                        <button class="filter-btn" data-filter="important">
+                            <span>⭐</span>
+                            <span>Важные</span>
+                        </button>
+                        <button class="filter-btn" data-filter="active">
+                            <span>🔵</span>
+                            <span>Активные</span>
+                        </button>
+                        <button class="filter-btn" data-filter="completed">
+                            <span>✅</span>
+                            <span>Завершенные</span>
+                        </button>
+                    </div>
+                    
+                    <div class="board-actions">
+                        <button class="btn btn-outline" style="width: 100%; margin-bottom: 10px; color: white; border-color: rgba(255,255,255,0.3);">
+                            <span>⚙️</span>
+                            <span>Настройки доски</span>
+                        </button>
+                        <button class="btn btn-outline" id="back-to-overview" style="width: 100%; color: white; border-color: rgba(255,255,255,0.3);">
+                            <span>←</span>
+                            <span>К обзору</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="board-content">
+                    <div class="board-header-content">
+                        <div class="board-header-top">
+                            <h1 class="board-title-large" id="board-title-large">Название доски</h1>
+                            <div>
+                                <button class="btn" id="add-task-btn-board">
+                                    <span>➕</span>
+                                    <span>Добавить задачу</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="board-description" id="board-description-large">
+                            Описание доски задач. Здесь вы можете управлять всеми задачами проекта.
+                        </div>
+                        
+                        <div class="board-stats-bar">
+                            <div class="board-stat-card">
+                                <span class="number" id="board-all-tasks">0</span>
+                                <span class="label">Всего задач</span>
+                            </div>
+                            <div class="board-stat-card">
+                                <span class="number" id="board-completed-tasks">0</span>
+                                <span class="label">Выполнено</span>
+                            </div>
+                            <div class="board-stat-card">
+                                <span class="number" id="board-pending-tasks">0</span>
+                                <span class="label">В процессе</span>
+                            </div>
+                            <div class="board-stat-card">
+                                <span class="number" id="board-urgent-tasks">0</span>
+                                <span class="label">Срочные</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="board-body">
+                        <div class="add-task-section" id="add-task-section" style="display: none;">
+                            <h3>Новая задача</h3>
+                            <form id="add-task-form">
+                                <div class="form-group">
+                                    <label>Название задачи</label>
+                                    <input type="text" id="new-task-input" class="form-control" placeholder="Что нужно сделать?" required>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Приоритет</label>
+                                        <div class="priority-selector">
+                                            <button type="button" class="priority-btn" data-priority="low">🟢 Низкий</button>
+                                            <button type="button" class="priority-btn active" data-priority="medium">🟡 Средний</button>
+                                            <button type="button" class="priority-btn" data-priority="high">🔴 Высокий</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="task-due-date">Срок выполнения</label>
+                                        <input type="date" id="task-due-date" class="form-control">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Описание</label>
+                                    <textarea id="task-description" class="form-control" placeholder="Добавьте подробное описание..." rows="3"></textarea>
+                                </div>
+                                
+                                <div style="display: flex; gap: 10px;">
+                                    <button type="button" class="btn btn-outline" id="cancel-task-btn">Отмена</button>
+                                    <button type="submit" class="btn">Добавить задачу</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div class="tasks-container" id="board-tasks-container">
+                            <!-- Задачи будут здесь -->
+                        </div>
+                        
+                        <div class="empty-state hidden" id="board-empty-state">
+                            <div class="empty-icon">📝</div>
+                            <h3>Задачи отсутствуют</h3>
+                            <p>Добавьте свою первую задачу на этой доске</p>
+                            <button class="btn" onclick="showAddTaskForm()">Добавить задачу</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Данные приложения
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+        let boards = JSON.parse(localStorage.getItem('boards')) || [];
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let currentBoardId = null;
+        let currentFilter = 'all';
+
+        // Инициализация приложения
+        document.addEventListener('DOMContentLoaded', function() {
+            initApp();
+            
+            // Загружаем тестовые данные если их нет
+            loadSampleData();
+            
+            // Проверяем авторизацию
+            if (currentUser) {
+                showAuthorizedUI();
+                showTab('overview-tab');
+            } else {
+                showUnauthorizedUI();
+                showTab('auth-tab');
+            }
+        });
+
+        function initApp() {
+            // Навигация по вкладкам
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.dataset.tab;
+                    showTab(tabId);
+                });
+            });
+
+            // Аутентификация
+            initAuth();
+            
+            // Доски
+            document.getElementById('create-board-btn').addEventListener('click', createNewBoard);
+            document.getElementById('back-to-overview').addEventListener('click', function() {
+                showTab('overview-tab');
+            });
+            
+            // Задачи
+            document.getElementById('add-task-btn-board').addEventListener('click', showAddTaskForm);
+            document.getElementById('cancel-task-btn').addEventListener('click', hideAddTaskForm);
+            document.getElementById('add-task-form').addEventListener('submit', handleAddTask);
+            
+            // Фильтры
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    setFilter(this.dataset.filter);
+                });
+            });
+            
+            // Уведомления
+            document.querySelector('.close-btn').addEventListener('click', function() {
+                document.getElementById('notification').classList.remove('show');
+            });
+        }
+
+        function initAuth() {
+            // Переключение между формами
+            document.getElementById('show-register').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('login-form-container').classList.add('hidden');
+                document.getElementById('register-form-container').classList.remove('hidden');
+            });
+
+            document.getElementById('show-login').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('register-form-container').classList.add('hidden');
+                document.getElementById('login-form-container').classList.remove('hidden');
+            });
+
+            // Вход
+            document.getElementById('login-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = document.getElementById('login-username').value.trim();
+                const password = document.getElementById('login-password').value;
+
+                const user = users.find(u => u.username === username && u.password === password);
+                
+                if (user) {
+                    currentUser = user;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    showNotification('Вход выполнен успешно!', 'success');
+                    showAuthorizedUI();
+                    showTab('overview-tab');
+                    updateOverview();
+                } else {
+                    showNotification('Неверное имя пользователя или пароль!', 'error');
+                }
+            });
+
+            // Регистрация
+            document.getElementById('register-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = document.getElementById('register-username').value.trim();
+                const email = document.getElementById('register-email').value.trim();
+                const password = document.getElementById('register-password').value;
+                const confirmPassword = document.getElementById('register-confirm-password').value;
+
+                if (password !== confirmPassword) {
+                    showNotification('Пароли не совпадают!', 'error');
+                    return;
+                }
+
+                if (users.find(u => u.username === username)) {
+                    showNotification('Пользователь с таким именем уже существует!', 'error');
+                    return;
+                }
+
+                const newUser = {
+                    id: Date.now().toString(),
+                    username,
+                    email,
+                    password,
+                    createdAt: new Date().toISOString()
+                };
+
+                users.push(newUser);
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                // Автоматический вход после регистрации
+                currentUser = newUser;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                showNotification('Аккаунт создан успешно!', 'success');
+                showAuthorizedUI();
+                showTab('overview-tab');
+                updateOverview();
+                
+                // Создаем первую доску для нового пользователя
+                createWelcomeBoard();
+            });
+
+            // Выход
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                currentUser = null;
+                localStorage.removeItem('currentUser');
+                showNotification('Вы вышли из системы', 'success');
+                showUnauthorizedUI();
+                showTab('auth-tab');
+            });
+        }
+
+        function showTab(tabId) {
+            // Скрываем все вкладки
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Убираем активный класс со всех кнопок
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Показываем нужную вкладку
+            document.getElementById(tabId).classList.add('active');
+            
+            // Активируем соответствующую кнопку
+            document.querySelector(`.nav-tab[data-tab="${tabId}"]`).classList.add('active');
+            
+            // Обновляем данные если нужно
+            if (tabId === 'overview-tab' && currentUser) {
+                updateOverview();
+            } else if (tabId === 'board-tab' && currentBoardId) {
+                loadBoard(currentBoardId);
+            }
+        }
+
+        function showAuthorizedUI() {
+            // Показываем меню пользователя
+            document.getElementById('user-menu').style.display = 'flex';
+            
+            // Обновляем информацию пользователя
+            document.getElementById('username-small').textContent = currentUser.username;
+            document.getElementById('user-avatar-small').textContent = currentUser.username.charAt(0).toUpperCase();
+            document.getElementById('user-avatar-large').textContent = currentUser.username.charAt(0).toUpperCase();
+            document.getElementById('user-name').textContent = currentUser.username;
+            document.getElementById('user-email').textContent = currentUser.email;
+            document.getElementById('welcome-name').textContent = currentUser.username;
+            
+            // Включаем вкладки обзора и доски
+            document.querySelectorAll('.nav-tab[data-tab="overview-tab"], .nav-tab[data-tab="board-tab"]').forEach(tab => {
+                tab.disabled = false;
+                tab.style.opacity = '1';
+            });
+        }
+
+        function showUnauthorizedUI() {
+            // Скрываем меню пользователя
+            document.getElementById('user-menu').style.display = 'none';
+            
+            // Отключаем вкладки обзора и доски
+            document.querySelectorAll('.nav-tab[data-tab="overview-tab"], .nav-tab[data-tab="board-tab"]').forEach(tab => {
+                tab.disabled = true;
+                tab.style.opacity = '0.5';
+            });
+            
+            // Сбрасываем формы
+            document.getElementById('login-form').reset();
+            document.getElementById('register-form').reset();
+            document.getElementById('login-form-container').classList.remove('hidden');
+            document.getElementById('register-form-container').classList.add('hidden');
+        }
+
+        // ФУНКЦИИ ДЛЯ ДОСОК
+        function createNewBoard() {
+            const boardName = prompt('Введите название новой доски:');
+            if (!boardName || !boardName.trim()) return;
+
+            const colors = ['#4361ee', '#7209b7', '#4cc9f0', '#f72585', '#2ec4b6', '#ff9f1c'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+            const newBoard = {
+                id: Date.now().toString(),
+                name: boardName.trim(),
+                description: 'Новая доска для задач',
+                color: randomColor,
+                userId: currentUser.id,
+                createdAt: new Date().toISOString(),
+                taskCount: 0,
+                completedCount: 0
+            };
+
+            boards.push(newBoard);
+            localStorage.setItem('boards', JSON.stringify(boards));
+            
+            updateOverview();
+            showNotification(`Доска "${boardName}" создана!`, 'success');
+            
+            // Переходим к новой доске
+            openBoard(newBoard.id);
+        }
+
+        function createWelcomeBoard() {
+            const welcomeBoard = {
+                id: 'welcome-board',
+                name: 'Добро пожаловать!',
+                description: 'Ваша первая доска задач. Здесь вы можете добавлять и управлять задачами.',
+                color: '#4361ee',
+                userId: currentUser.id,
+                createdAt: new Date().toISOString(),
+                taskCount: 3,
+                completedCount: 1
+            };
+
+            if (!boards.find(b => b.id === 'welcome-board')) {
+                boards.push(welcomeBoard);
+                localStorage.setItem('boards', JSON.stringify(boards));
+            }
+            
+            // Создаем примеры задач для приветственной доски
+            const welcomeTasks = [
+                {
+                    id: 'welcome-task-1',
+                    title: 'Изучить возможности TaskFlow',
+                    description: 'Познакомьтесь со всеми функциями приложения',
+                    priority: 'high',
+                    boardId: 'welcome-board',
+                    userId: currentUser.id,
+                    completed: false,
+                    createdAt: new Date().toISOString(),
+                    dueDate: null
+                },
+                {
+                    id: 'welcome-task-2',
+                    title: 'Создать свою первую доску',
+                    description: 'Добавьте доску для вашего проекта',
+                    priority: 'medium',
+                    boardId: 'welcome-board',
+                    userId: currentUser.id,
+                    completed: false,
+                    createdAt: new Date().toISOString(),
+                    dueDate: null
+                },
+                {
+                    id: 'welcome-task-3',
+                    title: 'Добавить несколько задач',
+                    description: 'Попробуйте добавить задачи разного приоритета',
+                    priority: 'low',
+                    boardId: 'welcome-board',
+                    userId: currentUser.id,
+                    completed: true,
+                    createdAt: new Date().toISOString(),
+                    dueDate: null
+                }
+            ];
+
+            welcomeTasks.forEach(task => {
+                if (!tasks.find(t => t.id === task.id)) {
+                    tasks.push(task);
+                }
+            });
+            
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        function openBoard(boardId) {
+            currentBoardId = boardId;
+            loadBoard(boardId);
+            showTab('board-tab');
+        }
+
+        function loadBoard(boardId) {
+            const board = boards.find(b => b.id === boardId);
+            if (!board) return;
+
+            // Обновляем информацию о доске
+            document.getElementById('current-board-name').textContent = board.name;
+            document.getElementById('current-board-description').textContent = board.description;
+            document.getElementById('current-board-color').style.background = board.color;
+            document.getElementById('board-title-large').textContent = board.name;
+            document.getElementById('board-description-large').textContent = board.description;
+
+            // Получаем задачи этой доски
+            const boardTasks = tasks.filter(task => task.boardId === boardId);
+            const totalTasks = boardTasks.length;
+            const completedTasks = boardTasks.filter(t => t.completed).length;
+            const pendingTasks = totalTasks - completedTasks;
+            const urgentTasks = boardTasks.filter(t => t.priority === 'high' && !t.completed).length;
+
+            // Обновляем статистику
+            document.getElementById('board-total-tasks').textContent = totalTasks;
+            document.getElementById('board-done-tasks').textContent = completedTasks;
+            document.getElementById('board-all-tasks').textContent = totalTasks;
+            document.getElementById('board-completed-tasks').textContent = completedTasks;
+            document.getElementById('board-pending-tasks').textContent = pendingTasks;
+            document.getElementById('board-urgent-tasks').textContent = urgentTasks;
+
+            // Рендерим задачи
+            renderBoardTasks(boardTasks);
+        }
+
+        function renderBoardTasks(boardTasks) {
+            const container = document.getElementById('board-tasks-container');
+            const emptyState = document.getElementById('board-empty-state');
+            
+            let filteredTasks = boardTasks;
+
+            // Применяем фильтр
+            switch (currentFilter) {
+                case 'active':
+                    filteredTasks = boardTasks.filter(t => !t.completed);
+                    break;
+                case 'completed':
+                    filteredTasks = boardTasks.filter(t => t.completed);
+                    break;
+                case 'important':
+                    filteredTasks = boardTasks.filter(t => t.priority === 'high' && !t.completed);
+                    break;
+                case 'today':
+                    const today = new Date().toDateString();
+                    filteredTasks = boardTasks.filter(t => 
+                        t.dueDate && new Date(t.dueDate).toDateString() === today && !t.completed
+                    );
+                    break;
+            }
+
+            if (filteredTasks.length === 0) {
+                container.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            
+            container.innerHTML = filteredTasks.map(task => `
+                <div class="task-card ${task.completed ? 'completed' : ''}">
+                    <div class="task-header-card">
+                        <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} 
+                               onchange="toggleTaskStatus('${task.id}')">
+                        <div class="task-title">${task.title}</div>
+                        <div class="task-actions">
+                            <button class="btn-icon" onclick="editTask('${task.id}')">✏️</button>
+                            <button class="btn-icon btn-delete" onclick="deleteTask('${task.id}')">🗑️</button>
+                        </div>
+                    </div>
+                    ${task.description ? `<p style="color: #666; margin: 10px 0;">${task.description}</p>` : ''}
+                    <div class="task-meta">
+                        <span class="task-priority priority-${task.priority}">
+                            ${task.priority === 'high' ? '🔴 Высокий' : task.priority === 'medium' ? '🟡 Средний' : '🟢 Низкий'}
+                        </span>
+                        ${task.dueDate ? `
+                            <span class="task-due-date">
+                                📅 ${new Date(task.dueDate).toLocaleDateString('ru-RU')}
+                            </span>
+                        ` : ''}
+                        <span style="color: #999; font-size: 0.9rem;">
+                            📝 ${new Date(task.createdAt).toLocaleDateString('ru-RU')}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateOverview() {
+            if (!currentUser) return;
+
+            // Получаем доски пользователя
+            const userBoards = boards.filter(b => b.userId === currentUser.id);
+            const userTasks = tasks.filter(t => t.userId === currentUser.id);
+            
+            // Обновляем статистику
+            document.getElementById('total-boards').textContent = userBoards.length;
+            document.getElementById('total-tasks').textContent = userTasks.length;
+            document.getElementById('completed-tasks').textContent = userTasks.filter(t => t.completed).length;
+            document.getElementById('pending-tasks').textContent = userTasks.filter(t => !t.completed).length;
+            
+            // Рендерим доски
+            const boardsGrid = document.getElementById('boards-grid');
+            boardsGrid.innerHTML = userBoards.map(board => {
+                const boardTasks = tasks.filter(t => t.boardId === board.id);
+                const completed = boardTasks.filter(t => t.completed).length;
+                const total = boardTasks.length;
+                
+                return `
+                    <div class="board-card" onclick="openBoard('${board.id}')">
+                        <div class="board-header">
+                            <div>
+                                <div class="board-title">${board.name}</div>
+                                <div style="color: var(--dark-gray); font-size: 0.9rem;">${board.description}</div>
+                            </div>
+                            <div class="board-color" style="background: ${board.color}"></div>
+                        </div>
+                        <div class="board-meta">
+                            <span>📋 ${total} задач</span>
+                            <span>✅ ${completed} выполнено</span>
+                            <span>📅 ${new Date(board.createdAt).toLocaleDateString('ru-RU')}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Рендерим последние задачи
+            const recentTasks = userTasks.slice(0, 5); // Последние 5 задач
+            const recentTasksList = document.getElementById('recent-tasks-list');
+            recentTasksList.innerHTML = recentTasks.map(task => `
+                <div class="task-item-small">
+                    <input type="checkbox" class="task-checkbox-small" ${task.completed ? 'checked' : ''} disabled>
+                    <div class="task-title-small">${task.title}</div>
+                </div>
+            `).join('');
+        }
+
+        // ФУНКЦИИ ДЛЯ ЗАДАЧ
+        function showAddTaskForm() {
+            document.getElementById('add-task-section').style.display = 'block';
+            document.getElementById('new-task-input').focus();
+        }
+
+        function hideAddTaskForm() {
+            document.getElementById('add-task-section').style.display = 'none';
+            document.getElementById('add-task-form').reset();
+            document.querySelector('.priority-btn[data-priority="medium"]').classList.add('active');
+        }
+
+        function handleAddTask(e) {
+            e.preventDefault();
+            
+            if (!currentBoardId) {
+                showNotification('Выберите доску для добавления задачи', 'error');
+                return;
+            }
+            
+            const title = document.getElementById('new-task-input').value.trim();
+            const description = document.getElementById('task-description').value.trim();
+            const priority = document.querySelector('.priority-btn.active').dataset.priority;
+            const dueDate = document.getElementById('task-due-date').value;
+            
+            if (!title) {
+                showNotification('Введите название задачи!', 'error');
+                return;
+            }
+
+            const newTask = {
+                id: Date.now().toString(),
+                title,
+                description,
+                priority,
+                dueDate: dueDate || null,
+                boardId: currentBoardId,
+                userId: currentUser.id,
+                completed: false,
+                createdAt: new Date().toISOString()
+            };
+
+            tasks.push(newTask);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            
+            // Обновляем статистику доски
+            const board = boards.find(b => b.id === currentBoardId);
+            if (board) {
+                board.taskCount = (board.taskCount || 0) + 1;
+                localStorage.setItem('boards', JSON.stringify(boards));
+            }
+            
+            loadBoard(currentBoardId);
+            updateOverview();
+            hideAddTaskForm();
+            
+            showNotification('Задача добавлена успешно!', 'success');
+        }
+
+        function toggleTaskStatus(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            if (task) {
+                task.completed = !task.completed;
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                
+                // Обновляем статистику доски
+                const board = boards.find(b => b.id === task.boardId);
+                if (board) {
+                    const boardTasks = tasks.filter(t => t.boardId === task.boardId);
+                    board.completedCount = boardTasks.filter(t => t.completed).length;
+                    board.taskCount = boardTasks.length;
+                    localStorage.setItem('boards', JSON.stringify(boards));
+                }
+                
+                if (currentBoardId === task.boardId) {
+                    loadBoard(currentBoardId);
+                }
+                updateOverview();
+                
+                const status = task.completed ? 'выполнена' : 'активна';
+                showNotification(`Задача отмечена как ${status}`, 'success');
+            }
+        }
+
+        function deleteTask(taskId) {
+            if (confirm('Вы уверены, что хотите удалить эту задачу?')) {
+                const task = tasks.find(t => t.id === taskId);
+                tasks = tasks.filter(t => t.id !== taskId);
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                
+                // Обновляем статистику доски
+                if (task && task.boardId) {
+                    const board = boards.find(b => b.id === task.boardId);
+                    if (board) {
+                        const boardTasks = tasks.filter(t => t.boardId === task.boardId);
+                        board.completedCount = boardTasks.filter(t => t.completed).length;
+                        board.taskCount = boardTasks.length;
+                        localStorage.setItem('boards', JSON.stringify(boards));
+                    }
+                }
+                
+                if (currentBoardId && task && currentBoardId === task.boardId) {
+                    loadBoard(currentBoardId);
+                }
+                updateOverview();
+                showNotification('Задача удалена!', 'success');
+            }
+        }
+
+        function editTask(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            if (task) {
+                const newTitle = prompt('Введите новое название задачи:', task.title);
+                if (newTitle && newTitle.trim()) {
+                    task.title = newTitle.trim();
+                    localStorage.setItem('tasks', JSON.stringify(tasks));
+                    
+                    if (currentBoardId === task.boardId) {
+                        loadBoard(currentBoardId);
+                    }
+                    showNotification('Задача обновлена!', 'success');
+                }
+            }
+        }
+
+        function setFilter(filter) {
+            currentFilter = filter;
+            
+            // Обновляем активную кнопку
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.filter-btn[data-filter="${filter}"]`).classList.add('active');
+            
+            if (currentBoardId) {
+                loadBoard(currentBoardId);
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notification-text');
+            
+            notificationText.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function loadSampleData() {
+            // Добавляем тестового пользователя если нет пользователей
+            if (users.length === 0) {
+                const testUser = {
+                    id: 'demo-user',
+                    username: 'demo',
+                    email: 'demo@example.com',
+                    password: 'demo',
+                    createdAt: new Date().toISOString()
+                };
+                users.push(testUser);
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+
+            // Добавляем тестовые доски если нет досок
+            if (boards.length === 0) {
+                const sampleBoards = [
+                    {
+                        id: 'work-board',
+                        name: 'Рабочие задачи',
+                        description: 'Задачи по работе и проектам',
+                        color: '#4361ee',
+                        userId: 'demo-user',
+                        createdAt: new Date().toISOString(),
+                        taskCount: 5,
+                        completedCount: 2
+                    },
+                    {
+                        id: 'personal-board',
+                        name: 'Личные дела',
+                        description: 'Персональные задачи и планы',
+                        color: '#7209b7',
+                        userId: 'demo-user',
+                        createdAt: new Date().toISOString(),
+                        taskCount: 3,
+                        completedCount: 1
+                    },
+                    {
+                        id: 'learning-board',
+                        name: 'Обучение',
+                        description: 'Задачи для саморазвития',
+                        color: '#4cc9f0',
+                        userId: 'demo-user',
+                        createdAt: new Date().toISOString(),
+                        taskCount: 2,
+                        completedCount: 0
+                    }
+                ];
+                boards = sampleBoards;
+                localStorage.setItem('boards', JSON.stringify(boards));
+            }
+
+            // Добавляем тестовые задачи если нет задач
+            if (tasks.length === 0) {
+                const sampleTasks = [
+                    // Задачи для рабочей доски
+                    {
+                        id: 'task-1',
+                        title: 'Завершить проект TaskFlow',
+                        description: 'Доработать функционал и протестировать приложение',
+                        priority: 'high',
+                        boardId: 'work-board',
+                        userId: 'demo-user',
+                        completed: false,
+                        createdAt: new Date().toISOString(),
+                        dueDate: new Date(Date.now() + 86400000).toISOString().split('T')[0]
+                    },
+                    {
+                        id: 'task-2',
+                        title: 'Подготовить отчет',
+                        description: 'Составить квартальный отчет по проектам',
+                        priority: 'medium',
+                        boardId: 'work-board',
+                        userId: 'demo-user',
+                        completed: true,
+                        createdAt: new Date().toISOString(),
+                        dueDate: null
+                    },
+                    // Задачи для личной доски
+                    {
+                        id: 'task-3',
+                        title: 'Купить продукты',
+                        description: 'Молоко, хлеб, фрукты, овощи',
+                        priority: 'low',
+                        boardId: 'personal-board',
+                        userId: 'demo-user',
+                        completed: false,
+                        createdAt: new Date().toISOString(),
+                        dueDate: new Date().toISOString().split('T')[0]
+                    },
+                    // Задачи для доски обучения
+                    {
+                        id: 'task-4',
+                        title: 'Изучить новые технологии',
+                        description: 'Прочитать документацию по новым фреймворкам',
+                        priority: 'medium',
+                        boardId: 'learning-board',
+                        userId: 'demo-user',
+                        completed: false,
+                        createdAt: new Date().toISOString(),
+                        dueDate: null
+                    }
+                ];
+                tasks = sampleTasks;
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+            }
+        }
+    </script>
+    <script src="js/utils.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/boards.js"></script>
+<script src="js/tasks.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
